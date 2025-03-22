@@ -16,7 +16,7 @@ This project is designed to assist blind individuals in safely locating their ta
 
 The flow below illustrates the real-time decision-making process of the device:
 
-![image-20250322140111455](.\images\image-20250322140111455.png)
+![image-20250322140111455](images/image-20250322140111455.png)
 
 ## Environment
 
