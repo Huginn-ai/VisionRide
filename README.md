@@ -1,56 +1,68 @@
-# VisionRide
+# VisionRide: A Deep Learning Workflow-Based Ride-Hailing Assistance Agent for the Visually Impaired
 
-## 项目介绍
+## Introduction
 
+This project is designed to assist blind individuals in safely locating their target vehicle by recognizing the license plate and estimating the distance and direction to the car. The device provides real-time voice guidance and is built on lightweight, wearable hardware.
 
+## Features
 
-## 环境要求
+**Client-Server Architecture:** The deep learning inference tasks are handled by the server, while the client only requires the capability to capture images and play audio.
 
-**硬件环境**
+**License Plate Detection:** Detect license plates from camera input.
 
-Server端：16GB显存的显卡
+**Monocular Depth Estimation:** Estimates the distance between the user and the target car using a deep learning metric depth estimation model.
 
-Client端：树莓派 & 摄像头 & 蓝牙耳机
+**Voice Feedback:** Gives verbal instructions including detected plate number, direction, and proximity.
 
-**软件环境**
+The flow below illustrates the real-time decision-making process of the device:
 
-Server端：ubuntu 22.04 & cuda 11.7+
+![image-20250322140111455](.\images\image-20250322140111455.png)
 
-Client端：python 3.6+
+## Environment
 
-## 安装
+**Hardware Environment**
+
+- **Server:** GPU with 16GB VRAM
+- **Client:** Raspberry Pi, Camera, and Bluetooth Headset
+
+**Software Environment**
+
+- **Server:** Ubuntu 22.04 & CUDA 11.7+
+- **Client:** Python 3.6+
+
+## Installation
 
 ### Server
 
-安装xtts-api-server
+Install `xtts-api-server`
 
 > https://github.com/daswer123/xtts-api-server
 
-安装OpenALPR
+Install `OpenALPR`
 
 > https://github.com/openalpr/openalpr
 
-安装ollama
+Install `ollama`
 
 > https://ollama.com/
 
-下载LLM：Phi-4（可替换）
+Download LLM: `Phi-4` (Replaceable)
 
 ```
 ollama run phi4
 ```
 
-下载Depth Anything的度量深度估计模型checkpoint并放置到`./checkpoints`文件夹下
+Download the checkpoint for the Depth Anything metric depth estimation model and place it in the `./checkpoints` folder.
 
 > https://huggingface.co/spaces/LiheYoung/Depth-Anything/tree/main/checkpoints_metric_depth
 
-从配置文件中新建Conda环境
+Create a new Conda environment from the configuration file.
 
 ```
 conda env create -f env.yml
 ```
 
-修改`const.py`中的配置项，主要是修改下面的内容
+Modify the configuration items in `const.py`, primarily focusing on the following content:
 
 ```python
 # XTTS Service URL
@@ -60,7 +72,7 @@ XTTS_URL = "http://127.0.0.1:8003/tts_to_audio"
 SPEAKER_WAV_PATH = "/home/ubuntu/re_wav/en_re_man.wav"
 ```
 
-**Note**：运行服务端时可能会报错说找不到torchhub，此时需要将torchhub文件夹放在用户根目录下
+**Note:** When running the server, an error may occur indicating that torchhub cannot be found. In this case, place the torchhub folder in the user's root directory.
 
 ```
 mv ./torchhub ~/torchhub
@@ -72,7 +84,7 @@ mv ./torchhub ~/torchhub
 pip install -r requirements.txt
 ```
 
-修改`config.py`中的配置项，主要是要修改下面的内容，与服务端保持一致
+Modify the configuration items in `config.py`, primarily focusing on the following content, ensuring consistency with the server.
 
 ```python
 # Server Host Address
@@ -82,17 +94,17 @@ HOST = '127.0.0.1'
 PORT = 8002
 ```
 
-## 使用方式
+## Usage
 
 ### Server
 
-启动xtts-api-server，在xtts-api-server安装文件夹下运行命令
+Start the `xtts-api-server`. In the installation folder of `xtts-api-server`, run the following command:
 
 ```
 python -m xtts_api_server --deepspeed -p 8003 --listen
 ```
 
-启动服务端程序
+Start the server program:
 
 ```
 conda activate VisionRide
@@ -101,9 +113,8 @@ nohup python -u server.py >> server.log 2>&1 &
 
 ### Client
 
-启动客户端程序
+Start the client program:
 
 ```
 python client.py
 ```
-
